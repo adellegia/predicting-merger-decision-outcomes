@@ -26,7 +26,7 @@ import PyPDF2
 
 #--------------------------------------------------------------------------------------------------------------
 # Function to create folder
-def createFolder(directory):
+def _createFolder(directory):
     try:
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -69,7 +69,7 @@ def download_pdf(decision_page, article):
 
     # create case folder
     folder = f"../../../data/pdfs/{article}/{case_num}"
-    createFolder(folder)
+    _createFolder(folder)
 
     # download EN pdf/s
     table_decisions = soup.find('table', attrs={'id': 'decisions'})
@@ -142,7 +142,7 @@ def download_pdf6(decision_page, article):
 
     # create case folder
     folder = f"../../../data/pdfs/{article}/{case_num}"
-    createFolder(folder)
+    _createFolder(folder)
 
     # download EN pdf/s
     table_decisions = soup.find('table', attrs={'id': 'decisions'})
@@ -272,6 +272,28 @@ def parse_pdf(pdf_list):
                 print("Skipping file with LangDetectException: ", ex)
                 pass          
     return df_text
+
+#--------------------------------------------------------------------------------------------------------------
+# Function to regex article number
+def article_match(txt):
+    match = re.search(r"(?i)article\s*\d+\s*(\([^\)]+\))?\s*(\([^\)]+\))?", txt) 
+    if match:
+        first_match = match.group()
+        return first_match.replace(" ", "").replace("\t", "").replace("\n", "").lower()
+    else:
+        return "None"
+
+def article62(txt):
+    match = re.search(r"(?i)IN\s+CONJUNCTION\s+WITH\s+ART(?:ICLE)?\s+\d+\(\d+\)", txt)  
+    if match:
+        first_match = match.group()
+        return first_match.replace(" ", "").replace("\t", "").replace("\n", "").lower()
+    else:
+        return "None"
+
+#--------------------------------------------------------------------------------------------------------------
+#
+
 
 # from langdetect.lang_detect_exception import LangDetectException
 # import PyPDF2

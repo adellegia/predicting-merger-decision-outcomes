@@ -41,6 +41,7 @@ dependencies:
     - soupsieve==2.3.2.post1
     - lxml==4.9.2
     - imbalanced-learn-0.10.1
+    - fitz-0.0.1
     # - spacy==3.4.3
     # - lis==0.7.9
     # - os==2.1.4
