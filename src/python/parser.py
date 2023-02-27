@@ -135,11 +135,6 @@ def _parse_subheadings_text(pdf_file):
 
     return([subheading, long_text_list, article_txt, article_62, date, year, len_pdf, bsn_act])
 
-#--------------------------------------------------------------------------------------------------------------
-# Function to get business activities for Simplified Procedure (if len(pdf.pages)<=3)
-# def _parse_simplified_text(pdf_file):
-    # TODO: if len_pdf <= 3 and article6(1)
-
 
 #--------------------------------------------------------------------------------------------------------------
 def _drop_empty_lists(d):
@@ -173,10 +168,27 @@ def _extract_between_text(subheading_dict, long_text_list):
     return(result)
 
 #--------------------------------------------------------------------------------------------------------------
+# Function to get business activities for Simplified Procedure (if len(pdf.pages)<=3)
+def _parse_simplified_text(text):
+
+    # Define the start and end patterns
+    start_pattern = re.compile(r'(?i)business activities of the undertakings concerned are')
+    end_pattern = re.compile(r'(?i)after examination of the notification')
+
+    # Find the start and end positions of the patterns
+    start_pos = start_pattern.search(text).end()
+    end_pos = end_pattern.search(text).start()
+
+    # Extract the text between the patterns
+    result = text[start_pos:end_pos].strip()
+
+    return(result)
+
+#--------------------------------------------------------------------------------------------------------------
 # Function to parse pdf by section
 def parse_pdf_section(pdf_list):
 
-    df_text = pd.DataFrame(columns = ['date', 'year', 'article', 'article_txt', 'article_62', 'case_num', 'filename', 'section_text'])
+    df_text = pd.DataFrame(columns = ['date', 'year', 'len_pdf', 'article', 'article_txt', 'article_62', 'case_num', 'filename', 'section_text', 'bsn_act', 'simp_text'])
 
     for pdf_file in tqdm(pdf_list):
             article = re.search("art[0-9]+\.[0-9]+", pdf_file).group()
@@ -187,7 +199,6 @@ def parse_pdf_section(pdf_list):
             filename = match.group()
             
             try:
-                # TODO: if len > 3
                 subheadings_text = _parse_subheadings_text(pdf_file)
                 subheading = subheadings_text[0]
                 long_text_list = subheadings_text[1]
@@ -197,23 +208,34 @@ def parse_pdf_section(pdf_list):
                 date = subheadings_text[4]
                 year = subheadings_text[5]
                 len_pdf = subheadings_text[6]
+                bsn_act = subheadings_text[7]
 
-                subheading_dict = _find_indices(subheading, long_text_list)
+                if len_pdf > 5:
+                    subheading_dict = _find_indices(subheading, long_text_list)
 
-                section_text = _extract_between_text(subheading_dict, long_text_list)
+                    section_text = _extract_between_text(subheading_dict, long_text_list)
+                    simp_text = "None"
+                    row = pd.DataFrame({'date': date, 'year': year, 'len_pdf':len_pdf,
+                                                'article': article, 'article_txt': article_txt, 'article_62': article_62, 
+                                                'case_num': case_num,'filename': filename,
+                                                'section_text': [section_text], 'bsn_act': bsn_act, 'simp_text': simp_text}, index=[0])
+                    df_text = pd.concat([row,df_text.loc[:]]).reset_index(drop=True)
+                else:
+                    section_text = "None"
+                    try:
+                        simp_text = _parse_simplified_text(bsn_act)
+                    except AttributeError:
+                        pass
 
-                # TODO: each section text is a row, label which subheading it corresponds
-                row = pd.DataFrame({'date': date, 'year': year, 'len_pdf':len_pdf,
-                                            'article': article, 'article_txt': article_txt, 'article_62': article_62, 
-                                            'case_num': case_num,'filename': filename,
-                                            'section_text': [section_text]}, index=[0])
-                df_text = pd.concat([row,df_text.loc[:]]).reset_index(drop=True)
+                    row = pd.DataFrame({'date': date, 'year': year, 'len_pdf':len_pdf,
+                            'article': article, 'article_txt': article_txt, 'article_62': article_62, 
+                            'case_num': case_num,'filename': filename,
+                            'section_text': [section_text], 'bsn_act': bsn_act, 'simp_text': simp_text}, index=[0])
+                    df_text = pd.concat([row,df_text.loc[:]]).reset_index(drop=True)
+
             except (IOError, FileNotFoundError) as ex:
                 print("Skipping corrupted PDF file: ", ex)
-                pass
-            # except LangDetectException as ex:
-            #     print("Skipping file with LangDetectException: ", ex)
-            #     pass          
+                pass        
     return df_text
 
 #--------------------------------------------------------------------------------------------------------------
@@ -221,22 +243,21 @@ def parse_pdf_section(pdf_list):
 def split_text(df):
     df_split = df.explode('section_text').reset_index(drop=True)
 
+    mask_non = df_split['simp_text'] == 'None'
     # get subheading from section_text
-    df_split['section'] = df_split['section_text'].str.get(0)
+    df_split.loc[mask_non, 'section'] = df_split.loc[mask_non, 'section_text'].str.get(0)
 
     # remove the first element/subheading of section_tex
     remove_first = lambda x: x[1:]
-    df_split['section_text'] = df_split['section_text'].apply(remove_first)
+    df_split.loc[mask_non,'section_text'] = df_split.loc[mask_non,'section_text'].apply(remove_first)
 
     return(df_split)
 
 #--------------------------------------------------------------------------------------------------------------
 # Function to clean parsed text
 def clean_text(df_split):
-    # remove if section_text is empty or len=1
-    is_valid = lambda x: isinstance(x, list) and len(x) > 1
-    valid_mask = df_split['section_text'].apply(is_valid)
-    df_split = df_split[valid_mask].reset_index(drop=True)
+    #remove if section_text is empty or len=1 but not simp_text = None
+    df_split = df_split[(df_split['simp_text'] != "None") | ((df_split['section_text'].str.len() > 1) & (~df_split['section_text'].isnull()))]
 
     # remove based on subheading/section
     keep_mask = ~df_split['section'].str.lower().isin(['en', 'merger procedure', 'commission decision'])
@@ -280,7 +301,12 @@ def filter_conclusion(df_split):
 
 def clean_parsed_pdf_section(df):
     df_split = split_text(df)
-    df_split = clean_text(df_split)
-    df_filtered = filter_conclusion(df_split)
+    df_clean = clean_text(df_split)
 
-    return(df_filtered)
+    df_sub = df_clean[df_clean['simp_text'] == "None"]
+    df_simp = df_clean[df_clean['simp_text'] != "None"]
+
+    df_filtered=filter_conclusion(df_sub)
+    df_final_clean = pd.concat([df_filtered, df_simp]).reset_index(drop=True)
+
+    return(df_final_clean)
