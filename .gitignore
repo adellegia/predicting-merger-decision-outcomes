@@ -3,3 +3,5 @@ models/
 neuralcoref/
 *\__pycache__
 *\archive*
+src/python/notebook/parsing_by_section - Copy.ipynb
+src/python/notebook/parsing_by_section_draft.ipynb

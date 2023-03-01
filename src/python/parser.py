@@ -89,7 +89,7 @@ def _extract_date_text(section_text):
 # Function to get year
 def _extract_year_text(text):
     # Define a regular expression pattern to match years between 2004 and 2022
-    pattern = r'\b(20[0-1][0-9]|2020)\b'
+    pattern = r'\b(20[0-1][0-9]|2020)\b' #[2][0][0-2][0-9]
 
     # Use re.search() to extract the first match of the pattern in the subheading
     match = re.search(pattern, text)
@@ -189,7 +189,7 @@ def _parse_simplified_text(text):
 def parse_pdf_section(pdf_list):
 
     df_text = pd.DataFrame(columns = ['date', 'year', 'len_pdf', 'article', 'article_txt', 'article_62', 'case_num', 'filename', 'section_text', 'bsn_act', 'simp_text'])
-
+    simp_text="None"
     for pdf_file in tqdm(pdf_list):
             article = re.search("art[0-9]+\.[0-9]+", pdf_file).group()
             case_num = re.search("M\.[0-9]{4,5}", pdf_file).group()
