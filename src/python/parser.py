@@ -89,7 +89,7 @@ def _extract_date_text(section_text):
 # Function to get year
 def _extract_year_text(text):
     # Define a regular expression pattern to match years between 2004 and 2022
-    pattern = r'\b(20[0-1][0-9]|2020)\b' #[2][0][0-2][0-9]
+    pattern = r'\b([2][0][0-2][0-9])\b' #[2][0][0-2][0-9]
 
     # Use re.search() to extract the first match of the pattern in the subheading
     match = re.search(pattern, text)
@@ -183,6 +183,30 @@ def _parse_simplified_text(text):
     result = text[start_pos:end_pos].strip()
 
     return(result)
+
+def _parse_simplified_text2(text):
+    # Define the start and end patterns
+    start_pattern = re.compile(r'(?i)business activities of the undertakings concerned are|business activities')
+    end_pattern = re.compile(r'(?i)after examination of the notification|\n \n|\n\n')
+
+    result = "None"
+    try:
+        # Find the start and end positions of the patterns
+        start_pos = start_pattern.search(text).end()
+        end_match = end_pattern.search(text[start_pos:])
+        if end_match is None:
+            end_pos = len(text)
+        else:
+            end_pos = start_pos + end_match.start()
+
+        # Extract the text between the patterns
+        result = text[start_pos:end_pos].strip()
+    except AttributeError:
+        pass
+    except UnboundLocalError:
+        pass
+
+    return result
 
 #--------------------------------------------------------------------------------------------------------------
 # Function to parse pdf by section
