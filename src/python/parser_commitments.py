@@ -329,27 +329,27 @@ def clean_text(df_split):
 
     return(df_split)
 
-#--------------------------------------------------------------------------------------------------------------
-# Function to remove CONCLUSION section
-def remove_conclusion(df_clean):
-    # remove conclusion
-    keep_mask = ~(df_clean['section'].str.lower().str.contains('conclusion'))
+# #--------------------------------------------------------------------------------------------------------------
+# # Function to remove CONCLUSION section
+# def remove_conclusion(df_clean):
+#     # remove conclusion
+#     keep_mask = ~(df_clean['section'].str.lower().str.contains('conclusion'))
 
-    # Filter the DataFrame to keep only rows where the mask is True
-    df_filtered = df_clean[keep_mask].reset_index(drop=True)
+#     # Filter the DataFrame to keep only rows where the mask is True
+#     df_filtered = df_clean[keep_mask].reset_index(drop=True)
 
-    return(df_filtered)
+#     return(df_filtered)
 
-#--------------------------------------------------------------------------------------------------------------
-# Function to remove COMMITMENTS section
-def remove_commitments(df_clean):
-    # remove commitments
-    keep_mask = ~(df_clean['section'].str.lower().str.contains('commitment|remedies|remedy|obligation|condition'))
+# #--------------------------------------------------------------------------------------------------------------
+# # Function to remove COMMITMENTS section
+# def remove_commitments(df_clean):
+#     # remove commitments
+#     keep_mask = ~(df_clean['section'].str.lower().str.contains('commitment|remedies|remedy|obligation|condition'))
 
-    # Filter the DataFrame to keep only rows where the mask is True
-    df_filtered = df_clean[keep_mask].reset_index(drop=True)
+#     # Filter the DataFrame to keep only rows where the mask is True
+#     df_filtered = df_clean[keep_mask].reset_index(drop=True)
 
-    return(df_filtered)
+#     return(df_filtered)
 
 #--------------------------------------------------------------------------------------------------------------
 # Run all functions
