@@ -1,6 +1,6 @@
 data/
 models/
-output/*.xlsx
+output/
 neuralcoref/
 *\__pycache__
 *\archive*

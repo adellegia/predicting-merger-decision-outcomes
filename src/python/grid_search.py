@@ -55,7 +55,7 @@ def create_label(data, label_name):
     df1 = df[df[label_name].isin([0,1])].reset_index(drop=True)
 
     le = LabelEncoder()
-    df1['label'] = le.fit_transform(df1['phase2'])
+    df1['label'] = le.fit_transform(df1[label_name])
 
     return(df1)
 
@@ -351,7 +351,7 @@ def get_feature_importance(trained_model, pipeline_train):
 
     # Sort the DataFrame by the absolute value of the importance score
     df_feature_importance['abs_importance'] = abs(df_feature_importance['importance'])
-    df_feature_importance = df_feature_importance.sort_values(by='abs_importance', ascending=False).drop(columns='abs_importance')
+    df_feature_importance = df_feature_importance.sort_values(by='abs_importance', ascending=False)
 
     # Print the feature importance values
     # print(df_feature_importance)
@@ -361,38 +361,51 @@ def get_feature_importance(trained_model, pipeline_train):
 
 #######################################################################################################
 # create df of feature importances by label
-def get_feature_importance10(feature_importance, feature_names, y_train):
-    # Get the index of label=1 and label=0 in the y_resampled array
-    idx_label_1 = np.where(y_train == 1)[0]
-    idx_label_0 = np.where(y_train == 0)[0]
-
-
-    # Get the coefficients for label=1 and label=0
-    coefs_label_1 = feature_importance[idx_label_1]
-    coefs_label_0 = feature_importance[idx_label_0]
-
-    # Get the feature names for label=1 and label=0
-    feature_names_label_1 = [feature_names[i] for i in idx_label_1]
-    feature_names_label_0 = [feature_names[i] for i in idx_label_0]
-
-    # Create a dictionary of feature names and their corresponding coefficients for label=1 and label=0
-    coef_dict_label_1 = dict(zip(feature_names_label_1, coefs_label_1))
-    coef_dict_label_0 = dict(zip(feature_names_label_0, coefs_label_0))
+def get_feature_importance10(df_features_train):
 
     # label=1
-    df_feature_importance1 = pd.DataFrame.from_dict(coef_dict_label_1, orient='index', columns=['importance'])
-    df_feature_importance1 = df_feature_importance1.reset_index()
-
-    df_feature_importance1 = df_feature_importance1.rename({'index':'feature'}, axis=1)
-    df_feature_importance1['abs_importance'] = abs(df_feature_importance1['importance'])
-    df_feature_importance1 = df_feature_importance1.sort_values(by='abs_importance', ascending=False).drop(columns='abs_importance')
-
+    df_feature_importance1 = df_features_train[df_features_train['importance']>0].sort_values(by='importance', ascending=False).reset_index(drop=True)
+    
     # label=0
-    df_feature_importance0 = pd.DataFrame.from_dict(coef_dict_label_0, orient='index', columns=['importance'])
-    df_feature_importance0 = df_feature_importance0.reset_index()
-
-    df_feature_importance0 = df_feature_importance0.rename({'index':'feature'}, axis=1)
+    df_feature_importance0 = df_features_train[df_features_train['importance']<0].reset_index(drop=True)
     df_feature_importance0['abs_importance'] = abs(df_feature_importance0['importance'])
-    df_feature_importance0 = df_feature_importance0.sort_values(by='abs_importance', ascending=False).drop(columns='abs_importance')
+    df_feature_importance0 = df_feature_importance0.sort_values(by='abs_importance', ascending=False)
 
     return(df_feature_importance1, df_feature_importance0)
+
+
+# def get_feature_importance10(feature_importance, feature_names, y_train):
+#     # Get the index of label=1 and label=0 in the y_resampled array
+#     idx_label_1 = np.where(y_train == 1)[0]
+#     idx_label_0 = np.where(y_train == 0)[0]
+
+
+#     # Get the coefficients for label=1 and label=0
+#     coefs_label_1 = feature_importance[idx_label_1]
+#     coefs_label_0 = feature_importance[idx_label_0]
+
+#     # Get the feature names for label=1 and label=0
+#     feature_names_label_1 = [feature_names[i] for i in idx_label_1]
+#     feature_names_label_0 = [feature_names[i] for i in idx_label_0]
+
+#     # Create a dictionary of feature names and their corresponding coefficients for label=1 and label=0
+#     coef_dict_label_1 = dict(zip(feature_names_label_1, coefs_label_1))
+#     coef_dict_label_0 = dict(zip(feature_names_label_0, coefs_label_0))
+
+#     # label=1
+#     df_feature_importance1 = pd.DataFrame.from_dict(coef_dict_label_1, orient='index', columns=['importance'])
+#     df_feature_importance1 = df_feature_importance1.reset_index()
+
+#     df_feature_importance1 = df_feature_importance1.rename({'index':'feature'}, axis=1)
+#     df_feature_importance1['abs_importance'] = abs(df_feature_importance1['importance'])
+#     df_feature_importance1 = df_feature_importance1.sort_values(by='abs_importance', ascending=False).drop(columns='abs_importance')
+
+#     # label=0
+#     df_feature_importance0 = pd.DataFrame.from_dict(coef_dict_label_0, orient='index', columns=['importance'])
+#     df_feature_importance0 = df_feature_importance0.reset_index()
+
+#     df_feature_importance0 = df_feature_importance0.rename({'index':'feature'}, axis=1)
+#     df_feature_importance0['abs_importance'] = abs(df_feature_importance0['importance'])
+#     df_feature_importance0 = df_feature_importance0.sort_values(by='abs_importance', ascending=False).drop(columns='abs_importance')
+
+#     return(df_feature_importance1, df_feature_importance0)
