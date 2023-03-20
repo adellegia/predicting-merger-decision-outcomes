@@ -38,7 +38,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
 from sklearn.model_selection import cross_val_predict, cross_val_score
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.metrics import classification_report, confusion_matrix, precision_recall_fscore_support
 
 from sklearn.pipeline import Pipeline, FeatureUnion
@@ -228,14 +228,18 @@ def evaluate(Ytest, Ypredict): #evaluate the model (accuracy, precision, recall,
     print('\nClassification report:\n', classification_report(Ytest, Ypredict))
     print('\nCR:', precision_recall_fscore_support(Ytest, Ypredict, average='macro'))
     print('\nConfusion matrix:\n', confusion_matrix(Ytest, Ypredict), '\n\n_______________________\n\n')
-    
+     # [[tn fp]
+     # [fn tp]]
+
     # Evaluate the performance of the model
+    tn, fp, fn, tp = confusion_matrix(Ytest, Ypredict).ravel()
+    fpr = fp / (fp + tn)
     accuracy = accuracy_score(Ytest, Ypredict) *100.0
     precision = precision_score(Ytest, Ypredict, average='binary')
     recall = recall_score(Ytest, Ypredict, average='binary')
     f_score = 2 * (precision * recall) / (precision + recall)
 
-    print(f' Accuracy: {accuracy:.2f} \n Precision: {precision:.3f} \n Recall: {recall:.3f} \n F1: {f_score:.3f}')
+    print(f' Accuracy: {accuracy:.3f} \n Precision: {precision:.3f} \n Recall: {recall:.3f} \n F1: {f_score:.3f} \n FPR: {fpr:.3f}')
 
 
 # fit logit using best params in train set
@@ -314,8 +318,12 @@ def train_model_cross_val(Xtrain, Ytrain, vec, model, cv):
         ('classifier', model)
     ])
     Ypredict_train = cross_val_predict(pipeline, Xtrain, Ytrain, cv=cv)
-    pipeline.fit(Xtrain, Ytrain)  # fit the pipeline on the whole training data
+
+    pipeline.fit(Xtrain, Ytrain)  # fit the pipeline on the whole training data for feature importance
     trained_model = pipeline.named_steps['classifier']
+
+    # y_proba = pipeline.predict_proba(Xtrain)[:, 1]
+
     evaluate(Ytrain, Ypredict_train)
     return pipeline, trained_model, Ypredict_train
 
@@ -328,8 +336,10 @@ def train_model_test(Xtrain, Ytrain, Xtest_v, Ytest_v, model, vec): #test on 'vi
         ('classifier', model)])
     pipeline.fit(Xtrain, Ytrain)
     print('***testing on test set***')
+
     Ypredict_test = pipeline.predict(Xtest_v) # fit the pipeline on the whole test set
     #tested_model = pipeline.named_steps['classifier']
+
     evaluate(Ytest_v, Ypredict_test)
     return(pipeline, Ypredict_test)
 
