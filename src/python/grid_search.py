@@ -38,7 +38,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
 from sklearn.model_selection import cross_val_predict, cross_val_score
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, precision_score, recall_score, f1_score, roc_auc_score, auc
 from sklearn.metrics import classification_report, confusion_matrix, precision_recall_fscore_support
 
 from sklearn.pipeline import Pipeline, FeatureUnion
@@ -238,8 +238,9 @@ def evaluate(Ytest, Ypredict): #evaluate the model (accuracy, precision, recall,
     precision = precision_score(Ytest, Ypredict, average='binary')
     recall = recall_score(Ytest, Ypredict, average='binary')
     f_score = 2 * (precision * recall) / (precision + recall)
+    roc_auc = roc_auc_score(Ytest, Ypredict, average=None)
 
-    print(f' Accuracy: {accuracy:.3f} \n Precision: {precision:.3f} \n Recall: {recall:.3f} \n F1: {f_score:.3f} \n FPR: {fpr:.3f}')
+    print(f' Accuracy: {accuracy:.3f} \n Precision: {precision:.3f} \n Recall: {recall:.3f} \n F1: {f_score:.3f} \n FPR: {fpr:.3f} \n ROC_AUC: {roc_auc:.3f}')
 
 
 # fit logit using best params in train set
@@ -279,11 +280,6 @@ def get_feature_importance_cv(pipeline_name):
     df_features = pd.DataFrame({'feature': feature_names, 'importance': feature_importances})
     df_features = df_features.reindex(df_features['importance'].abs().sort_values(ascending=False).index)
 
-    # Sort the dataframe by importance and get the top 10 features
-    top_features = df_features[:10]
-
-    # Print the top 10 features and their importances
-    # print(top_features)
     return(df_features)
 
 
@@ -321,8 +317,6 @@ def train_model_cross_val(Xtrain, Ytrain, vec, model, cv):
 
     pipeline.fit(Xtrain, Ytrain)  # fit the pipeline on the whole training data for feature importance
     trained_model = pipeline.named_steps['classifier']
-
-    # y_proba = pipeline.predict_proba(Xtrain)[:, 1]
 
     evaluate(Ytrain, Ypredict_train)
     return pipeline, trained_model, Ypredict_train
