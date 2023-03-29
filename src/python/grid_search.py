@@ -152,25 +152,25 @@ def create_train_test_excluded(df_balanced, df_balanced_unique, df_excluded):
 def group_by_case(df_train, df_test, df_test1, df_excluded):
     # Group df_train by 'case_num', 'article_new', 'file', and join the 'text_clean' column
     
-    df_train_grouped = df_train.groupby(['year', 'case_num', 'file', 'article_new', 'label'])['text_clean'].agg(' '.join).reset_index()
+    df_train_grouped = df_train.groupby(['year', 'case_num', 'article_new', 'label'])['text_clean'].agg(' '.join).reset_index() #'file',
     print("Grouping df_train by case_num",
           "1:", len(df_train_grouped[df_train_grouped['label'] == 1]['case_num'].unique()),
           "0:", len(df_train_grouped[df_train_grouped['label'] == 0]['case_num'].unique()))
 
     # Group df_test by 'case_num', 'article_new', 'file', and join the 'text_clean' column
-    df_test_grouped = df_test.groupby(['year', 'article_new', 'case_num', 'file', 'label'])['text_clean'].agg(' '.join).reset_index()
+    df_test_grouped = df_test.groupby(['year', 'article_new', 'case_num', 'label'])['text_clean'].agg(' '.join).reset_index()
     print("Grouping df_test by case_num", 
           "1:", len(df_test_grouped[df_test_grouped['label'] == 1]['case_num'].unique()),
           "0:", len(df_test_grouped[df_test_grouped['label'] == 0]['case_num'].unique()))
 
 
-    df_test1_grouped = df_test1.groupby(['year', 'article_new', 'case_num', 'file', 'label'])['text_clean'].agg(' '.join).reset_index()
+    df_test1_grouped = df_test1.groupby(['year', 'article_new', 'case_num', 'label'])['text_clean'].agg(' '.join).reset_index()
     print("Grouping df_test1 by case_num", 
           "1:", len(df_test1_grouped[df_test1_grouped['label'] == 1]['case_num'].unique()),
           "0:", len(df_test1_grouped[df_test1_grouped['label'] == 0]['case_num'].unique()))
 
     # Group df_excluded by 'case_num', 'article_new', 'file', and join the 'text_clean' column
-    df_excluded_grouped = df_excluded.groupby(['year', 'article_new', 'case_num', 'file', 'label'])['text_clean'].agg(' '.join).reset_index()
+    df_excluded_grouped = df_excluded.groupby(['year', 'article_new', 'case_num', 'label'])['text_clean'].agg(' '.join).reset_index()
     print("Grouping df_excluded by case_num with len:", df_excluded['case_num'].nunique())
 
     return(df_train_grouped, df_test_grouped, df_test1_grouped, df_excluded_grouped)
