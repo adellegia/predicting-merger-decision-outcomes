@@ -57,6 +57,12 @@ def create_label(data, label_name):
     return(df1)
 
 ########################################################################################################
+# function to retain section
+def retain_section(df, section):
+    df_section = df[df['section_fin']==section]
+    return df_section
+
+########################################################################################################
 # function to balance data
 def _balance(decision_id, Ytrain, random_seed=42):
     print('Balancing...')
@@ -94,9 +100,9 @@ def balance_unique_id(data):
 
 ########################################################################################################
 # function to create balanced dataset and excluded dataset
-def create_balanced_excluded(df_unique, df1):
+def create_balanced_excluded(df_unique, df1, random_seed=42):
 
-    decision_id_rus, y_rus = _balance(df_unique['case_num'], df_unique['label'], random_seed=42)
+    decision_id_rus, y_rus = _balance(df_unique['case_num'], df_unique['label'], random_seed=random_seed)
     df_balanced = df1[df1['case_num'].isin(decision_id_rus) & df1['label'].isin(y_rus)].reset_index(drop=True)
     df_balanced.groupby('label')['case_num'].nunique()
 
@@ -237,8 +243,9 @@ def evaluate(Ytest, Ypredict): #evaluate the model (accuracy, precision, recall,
     f_score = 2 * (precision * recall) / (precision + recall)
     roc_auc = roc_auc_score(Ytest, Ypredict, average=None)
 
-    print(f' Accuracy: {accuracy:.3f} \n Precision: {precision:.3f} \n Recall: {recall:.3f} \n F1: {f_score:.3f} \n FPR: {fpr:.3f} \n ROC_AUC: {roc_auc:.3f}')
-
+    print(f'Recall: {recall:.3f} \n Precision: {precision:.3f} \n F1: {f_score:.3f} \n FPR: {fpr:.3f} \n Accuracy: {accuracy:.3f} \n ROC_AUC: {roc_auc:.3f}')
+    
+    return([tn, fp, fn, tp, recall, precision, f_score, fpr, accuracy, roc_auc])
 
 # fit logit using best params in train set
 # c = 5
@@ -280,7 +287,18 @@ def get_feature_importance_cv(pipeline_name):
     return(df_features)
 
 
+########################################################################################################
+# evaluate confusion matrix
+def eval_matrix(df, X, y_true, y_pred):
+    results = pd.DataFrame(np.column_stack((X, y_true, y_pred)), columns=['text', 'target', 'y_predict'])
+    results = pd.concat([df, results], axis=1)
 
+    tn=results[(results.target == 0) & (results.y_predict == 0)]
+    fp=results[(results.target == 0) & (results.y_predict == 1)]
+    fn=results[(results.target == 1) & (results.y_predict == 0)]
+    tp=results[(results.target == 1) & (results.y_predict == 1)]
+
+    return (results, tn, fp, fn, tp)
 
 
 
