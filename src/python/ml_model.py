@@ -141,6 +141,23 @@ def get_feature_importance10(df_features_train):
 
     return(df_feature_importance1, df_feature_importance0)
 
+#######################################################################################################
+# evaluate confusion matrix
+def eval_matrix(df, merger_info, X, y_true, y_pred):
+    results = pd.DataFrame(np.column_stack((X, y_true, y_pred)), columns=['text', 'target', 'y_predict'])
+    results = pd.concat([df, results], axis=1)
+    results = pd.merge(results, merger_info, how='left', left_on=['case_num', 'article'], right_on=['case_code', 'article'])
+
+    tn=results[(results.target == 0) & (results.y_predict == 0)]
+    fp=results[(results.target == 0) & (results.y_predict == 1)]
+    fn=results[(results.target == 1) & (results.y_predict == 0)]
+    tp=results[(results.target == 1) & (results.y_predict == 1)]
+
+    return (results, tn, fp, fn, tp)
+
+
+
+
 
 # def get_feature_importance10(feature_importance, feature_names, y_train):
 #     # Get the index of label=1 and label=0 in the y_resampled array
