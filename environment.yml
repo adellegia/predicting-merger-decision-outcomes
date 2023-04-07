@@ -42,6 +42,7 @@ dependencies:
     - lxml==4.9.2
     - imbalanced-learn-0.10.1
     - fitz-0.0.1
+    - xlsxwriter-3.0.9
     # - spacy==3.4.3
     # - lis==0.7.9
     # - os==2.1.4
