@@ -18,7 +18,7 @@ predicting-merger-decision-outcomes/
 │   ├───preds                                   - model predictions
 │   └───tables                                  - tables of descriptive statistics
 ├───src
-│   └───python                                  - functions for webscraping, parsing, pre-processing, parameter tuning, model training and evaluation
+│   └───python                                  - functions for webscraping, parsing, pre-processing, balancing and splitting data, parameter tuning, model training and evaluation
 ├─.gitignore                                    - .gitignore files                          
 ├─environment.yml                               - project environment                     
 ├─README.md
