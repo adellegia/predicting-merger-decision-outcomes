@@ -12,7 +12,7 @@ predicting-merger-decision-outcomes/
 │   ├───data_preparation                        - webscraping, text parsing and pre-processing, data cleaning
 │   ├───descriptives                            - descriptive statistics
 │   ├───experiment_1                            - using full text from 4 sections (grid search CV, training CV and evaluation, feature importance, robustness checks)
-│   ├───experiment_2                            - using single section text (training CV and evaluation, feature importance)
+│   └───experiment_2                            - using single section text (training CV and evaluation, feature importance)
 ├───output
 │   ├───figures                                 - plots and charts
 │   ├───preds                                   - model predictions
@@ -43,7 +43,7 @@ The pre-processed data used for modeling is available [here](https://www.dropbox
 Code was self-written, debugged with StackOverflow and ChatGPT, unless noted otherwise. The code for the parameter tuning, model training with tenfold cross-validation, and model evaluation was adapted from Medvedeva et al. (2020) available [here](https://github.com/masha-medvedeva/ECtHR_crystal_ball)
 
 ## Author
-Ma. Adelle Gia Arbo ([GitHub](https://github.com/adellegia), [LinkedIn](https://www.linkedin.com/in/ma-adelle-gia-arbo/))
+Ma. Adelle Gia Arbo (_giarbo.28@gmail.com_, [LinkedIn](https://www.linkedin.com/in/ma-adelle-gia-arbo/))
 
 ## License
 The material in this repository is made available under the [MIT license](http://opensource.org/licenses/mit-license.php). 
