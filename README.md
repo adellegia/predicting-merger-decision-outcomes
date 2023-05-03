@@ -11,6 +11,8 @@ This thesis also highlights the model’s limitations and challenges in practica
 
 Overall, this study opens up exciting possibilities for leveraging data science tools in antitrust decision-making as a supplement to expert judgment and analysis.
 
+## Data
+The processed data used for modeling is available [here](https://www.dropbox.com/scl/fo/szosfc6m6w41n4bp19z7s/h?dl=0&rlkey=oit0pvre3o2j3qatyq709jhh0).
 
 ## Author
 
