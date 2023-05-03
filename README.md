@@ -1,5 +1,32 @@
 # Predicting merger decision outcomes of the European Commission: A Natural Language Processing and Machine Learning approach
 
+```
+predicting-merger-decision-outcomes/
+├───data
+│   ├───decision_types
+│   ├───parsed
+│   ├───pdfs
+│   ├───processed
+│   └───raw
+├───models
+├───notebooks
+│   ├───data_preparation
+│   ├───descriptives
+│   ├───experiment_1
+│   ├───experiment_2
+├───output
+│   ├───figures
+│   ├───preds
+│   └───tables
+├───src
+│   ├───python
+│   └───R
+├─.gitignore                          
+├─environment.yml                     
+├─README.md
+└─Arbo_MaAdelleGia_master_thesis.pdf
+```
+
 ## Executive Summary
 Recent developments in data science provide new opportunities for analyzing large volumes of unstructured data, such as merger decision reports. While some studies have used Natural Language Processing (NLP) and Machine Learning (ML) techniques to forecast judicial decisions, text-based prediction of merger decision outcomes remains unexplored.
 
