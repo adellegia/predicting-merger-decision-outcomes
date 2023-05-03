@@ -37,12 +37,13 @@ This thesis also highlights the model’s limitations and challenges in practica
 Overall, this study opens up exciting possibilities for leveraging data science tools in antitrust decision-making as a supplement to expert judgment and analysis.
 
 ## Data
-The processed data used for modeling is available [here](https://www.dropbox.com/scl/fo/szosfc6m6w41n4bp19z7s/h?dl=0&rlkey=oit0pvre3o2j3qatyq709jhh0).
+The pre-processed data used for modeling is available [here](https://www.dropbox.com/scl/fo/szosfc6m6w41n4bp19z7s/h?dl=0&rlkey=oit0pvre3o2j3qatyq709jhh0).
+
+## Code
+Code was self-written, debugged with StackOverflow and ChatGPT, unless noted otherwise. The code for the parameter tuning, model training with tenfold cross-validation, and model evaluation was adapted from Medvedeva et al. (2020) available [here](https://github.com/masha-medvedeva/ECtHR_crystal_ball)
 
 ## Author
-
 Ma. Adelle Gia Arbo ([GitHub](https://github.com/adellegia), [LinkedIn](https://www.linkedin.com/in/ma-adelle-gia-arbo/))
 
 ## License
-
 The material in this repository is made available under the [MIT license](http://opensource.org/licenses/mit-license.php). 
