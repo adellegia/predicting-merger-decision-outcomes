@@ -4,3 +4,4 @@ output/
 neuralcoref/
 *\__pycache__
 *\archive*
+*\out*
