@@ -3,28 +3,26 @@
 ```
 predicting-merger-decision-outcomes/
 ├───data
-│   ├───decision_types
-│   ├───parsed
-│   ├───pdfs
-│   ├───processed
-│   └───raw
-├───models
-├───notebooks
-│   ├───data_preparation
-│   ├───descriptives
-│   ├───experiment_1
-│   ├───experiment_2
+│   ├───decision_types                          - merger decision types by article
+│   ├───parsed                                  - parsed datasets
+│   ├───pdfs                                    - raw merger decision PDFs
+│   ├───processed                               - pre-processed data
+│   └───raw                                     - raw html of search tool results in .txt files
+├───notebooks                                   
+│   ├───data_preparation                        - webscraping, text parsing and pre-processing, data cleaning
+│   ├───descriptives                            - descriptive statistics
+│   ├───experiment_1                            - using full text from 4 sections (grid search CV, training CV and evaluation, feature importance, robustness checks)
+│   ├───experiment_2                            - using single section text (training CV and evaluation, feature importance)
 ├───output
-│   ├───figures
-│   ├───preds
-│   └───tables
+│   ├───figures                                 - plots and charts
+│   ├───preds                                   - model predictions
+│   └───tables                                  - tables of descriptive statistics
 ├───src
-│   ├───python
-│   └───R
-├─.gitignore                          
-├─environment.yml                     
+│   └───python                                  - functions for webscraping, parsing, pre-processing, parameter tuning, model training and evaluation
+├─.gitignore                                    - .gitignore files                          
+├─environment.yml                               - project environment                     
 ├─README.md
-└─Arbo_MaAdelleGia_master_thesis.pdf
+└─Arbo_MaAdelleGia_master_thesis.pdf            - master thesis (digital copy)
 ```
 
 ## Executive Summary
