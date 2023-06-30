@@ -22,6 +22,7 @@ predicting-merger-decision-outcomes/
 ├─.gitignore                                    - .gitignore files                          
 ├─environment.yml                               - project environment                     
 ├─README.md
+├─Arbo_MaAdelleGia_master_thesis_poster.jpg     - master thesis poster
 └─Arbo_MaAdelleGia_master_thesis.pdf            - master thesis (digital copy)
 ```
 
@@ -35,6 +36,8 @@ Results show that a Support Vector Machine (SVM) linear classifier was the best-
 This thesis also highlights the model’s limitations and challenges in practical applications, including the need for expert judgment and human analysis. Future research can improve the study’s framework by collecting more data, considering the time variable when splitting the training and test sets, and exploring different machine learning models and more sophisticated deep learning algorithms.
 
 Overall, this study opens up exciting possibilities for leveraging data science tools in antitrust decision-making as a supplement to expert judgment and analysis.
+
+![](Arbo_MaAdelleGia_master_thesis_poster.jpg)
 
 ## Digital copy
 My master's thesis can also be downloaded [here](https://www.dropbox.com/s/u7bxhidvi30ix7h/Arbo_MaAdelleGia_master_thesis.pdf?dl=0).
